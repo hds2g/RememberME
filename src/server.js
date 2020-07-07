@@ -12,25 +12,31 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
+  /*
   await prisma.user.create({
     data: {
-      name: "Alice",
-      email: "alice@prisma.io",
+      username: "666",
+      email: "666.com",
       posts: {
-        create: { title: "Hello World" },
-      },
-      profile: {
-        create: { bio: "I like turtles" },
+        create: [
+          {
+            content: "eeee",
+            files: {
+              create: [{ url: "222.com" }, { url: "333" }],
+            },
+            categories: {
+              connect: [{ id: 5 }, { id: 6 }],
+            },
+          },
+          { content: "fffff" },
+        ],
       },
     },
   });
-  const allUsers = await prisma.user.findMany({
-    include: {
-      posts: true,
-      profile: true,
-    },
-  });
-  console.dir(allUsers, { depth: null });
+*/
+
+  const allUsers = await prisma.post.findMany();
+  console.dir(allUsers, { depth: 2 });
 }
 
 main()

@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model User {
@@ -30,7 +30,7 @@ model Post {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
 
-  categories Category[]  @relation(references: [id])
+  categories Category[]  @relation("MyRelationTable", references: [id])
 
   createdat DateTime @default(now())
   updatedat DateTime @default(now())
@@ -50,6 +50,6 @@ model File {
 model Category {
   id          Int      @default(autoincrement()) @id
   name        String
-  posts       Post[]  @relation(references: [id])
+  posts       Post[]  @relation("MyRelationTable", references: [id])
 }
 
