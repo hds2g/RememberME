@@ -1,0 +1,35 @@
+type User {
+  createdat: String!
+  email: String!
+  id: ID!
+  loginsecret: String
+  updatedat: String
+  username: String
+  posts: [Post!]!
+}
+
+type Post {
+  id: ID!
+  content: String
+  showat: String
+  slot: Int!
+  files: [File]
+  user: User!
+  categories: [Category]
+  createdat: String
+  updatedat: String
+}
+
+type File {
+  id: ID!
+  url: String
+  post: Post!
+  createdat: String
+  updatedat: String
+}
+
+type Category {
+  id: ID!
+  name: String!
+  posts: [Post]
+}

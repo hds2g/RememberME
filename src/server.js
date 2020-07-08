@@ -8,7 +8,10 @@ const PORT = process.env.PORT || 4000;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const server = new GraphQLServer({ schema, context: { prisma } });
+const server = new GraphQLServer({
+  schema,
+  context: { prisma },
+});
 server.express.use(logger("dev"));
 
 server.start({ port: PORT }, () =>
