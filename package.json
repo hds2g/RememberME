@@ -26,6 +26,7 @@
     "nodemon": "^2.0.4"
   },
   "scripts": {
-    "dev": "nodemon -e js,graphql --exec babel-node src/server.js"
+    "dev": "nodemon -e js,graphql --exec babel-node src/server.js",
+    "prisma_migrate": "cd prisma && npx prisma migrate save --name init --experimental && npx prisma migrate up --experimental && cd .."
   }
 }

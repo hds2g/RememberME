@@ -2,7 +2,7 @@ type User {
   createdat: String!
   email: String!
   id: ID!
-  loginsecret: String
+  loginSecret: String
   updatedat: String
   username: String
   posts: [Post!]!
