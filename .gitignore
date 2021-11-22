@@ -125,3 +125,5 @@ dmypy.json
 
 # Mac
 .DS_Store 
+
+uploads
