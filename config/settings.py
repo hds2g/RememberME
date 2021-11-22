@@ -41,6 +41,7 @@ PROJECT_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_editorjs",
+    "taggit",
 ]
 
 DJANGO_APPS = [
