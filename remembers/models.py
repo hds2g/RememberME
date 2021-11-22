@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 from django.db import models
 from core import models as core_models
 from django_editorjs import EditorJsField
@@ -27,6 +28,10 @@ class Remember(core_models.TimeStampedModel):
     )
     stage = models.CharField(
         max_length=2, choices=REMEMBER_STAGE, default=REMEMBER_STAGE[0][0]
+    )
+
+    showing_date = models.DateField(
+        "Showing Date", default=datetime.today() + timedelta(days=7)
     )
 
     remember = EditorJsField(
