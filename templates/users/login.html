@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load socialaccount %}
+
+
+{% block page_title %}
+    Log In
+{% endblock page_title %}
+
+{% block search-bar %}
+{% endblock search-bar %}
+
+{% block content %}
+
+<a href="{% provider_login_url 'google' method='oauth2' %}">
+    Google Login
+</a>
+
+<a href="{% provider_login_url 'google' method='oauth2' %}">
+    Kakao Login
+</a>
+
+{% for account in user.socialaccount_set.all %}
+<p><img width="50" height="50" src="{{ account.get_avatar_url }}"/></p>
+
+<p>UID: <a href="{{ account.extra_data.link }}">{{ account.uid }}</a></p>
+
+<p>email: {{ account.extra_data.email }}</p>
+<p>Name: {{ account.extra_data.name }}</p>
+<p>Picture: <img sre="{{ account.extra_data.picture }}" width="100" height="100"></p>
+{% endfor %}
+
+{% endblock content %} 
