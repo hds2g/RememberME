@@ -1,3 +1,5 @@
+from django.utils import timezone
+from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Remember
 from django.contrib import messages
@@ -5,8 +7,7 @@ from django.forms import ModelForm
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import requires_csrf_token
-
-# Create your views here.
+from . import models
 
 
 class RememberForm(ModelForm):
@@ -17,15 +18,21 @@ class RememberForm(ModelForm):
         ]
 
 
-def home(request):
-    if request.method == "POST":
-        form = RememberForm(request.POST)
-        if form.is_valid():
-            post = form.save()
-            messages.success(request, "submitted succesfully {}".format(post))
-            return redirect("/")
-    form = RememberForm()
-    return render(request, "remembers/home.html", {"form": form})
+class HomeView(ListView):
+    """HomeView Definition"""
+
+    model = models.Remember
+
+    paginate_by = 12
+    paginate_orphans = 5
+    ordering = "created"
+    context_object_name = "remember"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = timezone.now()
+        context["now"] = now
+        return context
 
 
 def editpost(request, id):
@@ -39,6 +46,8 @@ def editpost(request, id):
 
 def postdetail(request, id):
     remember = Remember.objects.get(id=id)
+    # print(id)
+    # print(remember)
     return render(request, "remembers/detail.html", {"remember": remember})
 
 

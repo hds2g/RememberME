@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block page_name %}
+    Home
+{% endblock page_name %}
+
+{% block content %}
+
+    {% for remember in remember  %}
+        <h2>{{remember.remember}}</h2>
+        <h3>{{remember.stage}}</h3> 
+        <h3>{{remember.showing_date}}</h3>
+    {% endfor %}
+
+
+{% endblock content %}

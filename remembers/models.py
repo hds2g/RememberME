@@ -62,4 +62,4 @@ class Remember(core_models.TimeStampedModel):
         # print(rem)
         # print(rem["time"])
         # return self.user
-        return str(rem["time"])
+        return self.user.username + "-" + str(rem["time"])

@@ -1,10 +1,11 @@
 <a href="/editpost/{{remember.id}}/">Edit</a>
+
 <section id="post-body"></section>
 <script>
   window.addEventListener("DOMContentLoaded", () => {
     const postBody = document.getElementById("post-body");
-    console.log("{{post.body|escapejs}}");
-    let body = JSON.parse("{{post.body|escapejs}}");
+    console.log("{{remember.remember|escapejs}}");
+    let body = JSON.parse("{{remember.remember|escapejs}}");
     let blocks = body.blocks;
     console.log(blocks.length);
 
