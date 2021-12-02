@@ -1,7 +1,7 @@
+from datetime import date
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Remember
 from django.contrib import messages
 from django.forms import ModelForm
 from django.http import JsonResponse
@@ -9,10 +9,12 @@ from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import requires_csrf_token
 from . import models
 
+# from users import models
+
 
 class RememberForm(ModelForm):
     class Meta:
-        model = Remember
+        model = models.Remember
         fields = [
             "remember",
         ]
@@ -25,14 +27,28 @@ class HomeView(ListView):
 
     paginate_by = 12
     paginate_orphans = 5
-    ordering = "created"
-    context_object_name = "remember"
+    # ordering = "created"
+    context_object_name = "remember_user_list"
+    template_name = "remembers/remember_list.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        now = timezone.now()
-        context["now"] = now
-        return context
+    def get_queryset(self):
+        # print(self.request.user)
+        # user_remember = models.Remember.objects.get(user=self.request.user)
+        # print(user_remember)
+        # print(self.request.user.is_anonymous)
+        if self.request.user.is_authenticated:
+            # return models.Remember.objects.filter(user=self.request.user)
+            return models.Remember.objects.filter(user=self.request.user).exclude(
+                showing_date__gte=date.today()
+            )
+        else:
+            return []
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     now = timezone.now()
+    #     context["now"] = now
+    #     return context
 
 
 def editpost(request, id):
@@ -45,7 +61,7 @@ def editpost(request, id):
 
 
 def postdetail(request, id):
-    remember = Remember.objects.get(id=id)
+    remember = models.Remember.objects.get(id=id)
     # print(id)
     # print(remember)
     return render(request, "remembers/detail.html", {"remember": remember})
