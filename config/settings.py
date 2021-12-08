@@ -40,6 +40,7 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    "django_seed",
     "django_editorjs",
     "taggit",
     "django.contrib.sites",

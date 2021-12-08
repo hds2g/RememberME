@@ -16,6 +16,42 @@
     box.style.border = "1px solid";
     postBody.appendChild(box);
 
+    // 
+    let showing_date = document.createElement(`h4`);
+    let stage = document.createElement('h4');
+    showing_date.textContent = "Showing Date : {{remember.showing_date}}";
+    stage.textContent = "Stage : {{remember.stage}}";
+    console.log("{{remember.showing_date}}");
+    console.log("{{remember.id}}");
+    box.appendChild(showing_date);
+    box.appendChild(stage);
+
+
+    // form
+    let form = document.createElement('form'); // set attribute (form) 
+    form.name = 'form'; 
+    form.id = 'rememberForm'
+    form.method = 'post'; 
+    form.action = "/remembers/{{remember.id}}/ok"; 
+    box.appendChild(form);
+
+    // Remember Button
+    let remember_btn = document.createElement("input");
+    remember_btn.value = "Remember";
+    remember_btn.type = "button";
+    remember_btn.id = "rememberBtn";
+    remember_btn.onclick = function () {
+      document.getElementById('rememberForm').submit(); // ajax....
+      //alert("Remember");
+    };
+
+    box.appendChild(remember_btn);
+
+    let opps_btn = document.createElement("button");
+    opps_btn.innerHTML = "Opps";
+    box.appendChild(opps_btn);
+
+    // EditorJS
     for (let index = 0; index <= blocks.length; index++) {
       console.log(blocks[index], index);
 
