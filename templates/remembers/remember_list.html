@@ -7,16 +7,23 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        {{remember_obj}}
-            {% for remember in remember_user_list  %}
-                {% comment %} <h2>{{remember.remember}}</h2>
-                <h3>{{remember.stage}}</h3> 
-                <h3>{{remember.showing_date}}</h3> {% endcomment %}
-                {% include "editorjs__.html" %}
 
-            {% empty %}
-                <li> no data <li>
-            {% endfor %}
+        tags: 
+        {% for tag in common_tags %}
+        <a href="{% url 'remembers:tagged' tag.slug %}">{{tag}}</a>
+        {% endfor %}
+
+        {% for remember in remembers  %}
+            {% comment %} <h2>{{remember.remember}}</h2>
+            <h3>{{remember.stage}}</h3> 
+            <h3>{{remember.showing_date}}</h3> {% endcomment %}
+
+            
+            {% include "editorjs__.html" %}
+
+        {% empty %}
+            <li> no data <li>
+        {% endfor %}
     {% else %}
         {% include "introduction.html" %}
     {% endif %}

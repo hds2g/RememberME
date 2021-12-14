@@ -13,6 +13,8 @@
 
     // to seperate each remember
     let box = document.createElement("div");
+    box.className = "{{remember}}";
+    box.style.display="block";
     box.style.border = "1px solid";
     postBody.appendChild(box);
 
@@ -20,20 +22,27 @@
     let showing_date = document.createElement(`h4`);
     let stage = document.createElement('h4');
     showing_date.textContent = "Showing Date : {{remember.showing_date}}";
-    stage.textContent = "Stage : {{remember.stage}}";
+
+    {% if remember.stage == "7" %}
+      stage.textContent = "Stage : 1 Week";
+    {% elif remember.stage == "14" %}
+      stage.textContent = "Stage : 14 Week";
+    {% elif remember.stage == "30" %}
+      stage.textContent = "Stage : 1 Month";
+    {% elif remember.stage == "60" %}
+      stage.textContent = "Stage : 2 Month";
+    {% elif remember.stage == "90" %}
+      stage.textContent = "Stage : 3 Month";
+    {% elif remember.stage == "180" %}
+      stage.textContent = "Stage : 6 Month";
+    {% else %}
+      stage.textContent = "Stage: {{remember.stage}}";      
+    {% endif %}
+    
     console.log("{{remember.showing_date}}");
     console.log("{{remember.id}}");
     box.appendChild(showing_date);
     box.appendChild(stage);
-
-
-    // form
-    let form = document.createElement('form'); // set attribute (form) 
-    form.name = 'form'; 
-    form.id = 'rememberForm'
-    form.method = 'post'; 
-    form.action = "/remembers/{{remember.id}}/ok"; 
-    box.appendChild(form);
 
     // Remember Button
     let remember_btn = document.createElement("input");
@@ -41,19 +50,80 @@
     remember_btn.type = "button";
     remember_btn.id = "rememberBtn";
     remember_btn.onclick = function () {
-      document.getElementById('rememberForm').submit(); // ajax....
-      //alert("Remember");
+      data = {test:'ok'}
+      console.log( 'remember btn clicked {{remember.id}}' );
+
+      // div remember hide
+      box.style.display="none";
+
+      const XHR = new XMLHttpRequest();
+
+      let urlEncodedData = "",
+          urlEncodedDataPairs = [],
+          name;
+
+      // Turn the data object into an array of URL-encoded key/value pairs.
+      for( name in data ) {
+        urlEncodedDataPairs.push( encodeURIComponent( name ) + '=' + encodeURIComponent( data[name] ) );
+      }
+
+      // Combine the pairs into a single string and replace all %-encoded spaces to
+      // the '+' character; matches the behavior of browser form submissions.
+      urlEncodedData = urlEncodedDataPairs.join( '&' ).replace( /%20/g, '+' );
+
+      // Define what happens on successful data submission
+      XHR.addEventListener( 'load', function(event) {
+        //alert( 'Yeah! Data sent and response loaded.' );
+      } );
+
+      // Define what happens in case of error
+      XHR.addEventListener( 'error', function(event) {
+        alert( 'Oops! Something went wrong.' );
+      } );
+
+      // Set up our request
+
+      XHR.open( 'POST', "{% url 'remembers:ok' remember.id %}" );
+
+      // Add the required HTTP header for form data POST requests
+      XHR.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+
+      // Finally, send our data.
+      XHR.send( urlEncodedData );
+      
     };
 
     box.appendChild(remember_btn);
 
+    
     let opps_btn = document.createElement("button");
     opps_btn.innerHTML = "Opps";
     box.appendChild(opps_btn);
+    opps_btn.onclick = function () {
+      data = {test:'ok'}
+      console.log( 'opps_btn btn clicked {{remember.id}}' );
+
+      const XHR = new XMLHttpRequest();
+
+      XHR.addEventListener( 'load', function(event) {
+        //alert( 'Yeah! Data sent and response loaded.' );
+      } );
+
+      XHR.addEventListener( 'error', function(event) {
+        alert( 'Oops! Something went wrong.' );
+      } );
+
+      XHR.open( 'POST', "/remembers/{{remember.id}}/ng/" );
+
+      XHR.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+
+      XHR.send();
+      
+    };
 
     // EditorJS
     for (let index = 0; index <= blocks.length; index++) {
-      console.log(blocks[index], index);
+      console.log(blocks[index].type, blocks[index], index);
 
       switch (blocks[index].type) {
         case "Header":

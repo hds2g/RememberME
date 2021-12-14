@@ -43,6 +43,7 @@ THIRD_PARTY_APPS = [
     "django_seed",
     "django_editorjs",
     "taggit",
+    # "taggit_autosuggest",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -193,3 +194,7 @@ ACCOUNT_FORMS = {"signup": "users.forms.MyCustomSignupForm"}
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_EMAIL_VERIFICATION = "none"
+
+# Tagit
+TAGGIT_CASE_INSENSITIVE = False
+TAGGIT_LIMIT = 50

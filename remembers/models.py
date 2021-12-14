@@ -17,18 +17,25 @@ class Remember(core_models.TimeStampedModel):
         "users.User", related_name="remembers", on_delete=models.CASCADE
     )
 
+    STAGE_1WEEK = "7"
+    STAGE_2WEEK = "14"
+    STAGE_1MONTH = "30"
+    STAGE_2MONTH = "60"
+    STAGE_3MONTH = "90"
+    STAGE_6MONTH = "180"
+    STAGE_1YEAR = "360"
+
     REMEMBER_STAGE = (
-        ("1W", "1Week"),
-        ("2W", "2Week"),
-        ("1M", "1Month"),
-        ("3M", "3Months"),
-        ("6M", "6Months"),
-        ("1Y", "1Year"),
-        ("2Y", "2Years"),
+        (STAGE_1WEEK, "1 Week"),
+        (STAGE_2WEEK, "2 Week"),
+        (STAGE_1MONTH, "1 Month"),
+        (STAGE_2MONTH, "2 Month"),
+        (STAGE_3MONTH, "3 Month"),
+        (STAGE_6MONTH, "6 Month"),
+        (STAGE_1YEAR, "1 Year"),
     )
-    stage = models.CharField(
-        max_length=2, choices=REMEMBER_STAGE, default=REMEMBER_STAGE[0][0]
-    )
+
+    stage = models.CharField(max_length=7, choices=REMEMBER_STAGE, default=STAGE_1WEEK)
 
     showing_date = models.DateField(
         "Showing Date", default=datetime.today() + timedelta(days=7)
@@ -54,8 +61,8 @@ class Remember(core_models.TimeStampedModel):
         }
     )
 
-    # slug = models.SlugField(unique=True, max_length=100)
-    tags = TaggableManager()
+    slug = models.SlugField(unique=True, max_length=100)
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         rem = json.loads(self.remember)

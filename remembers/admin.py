@@ -14,7 +14,7 @@ class RememberAdmin(admin.ModelAdmin):
         return obj.updated.strftime("%Y-%m-%d")
 
     def showing_format(self, obj):
-        return obj.updated.strftime("%Y-%m-%d")
+        return obj.showing_date.strftime("%Y-%m-%d")
 
     created_format.admin_order_field = "created"
     created_format.short_description = "CREATED"
@@ -31,7 +31,14 @@ class RememberAdmin(admin.ModelAdmin):
         "updated_format",
         "showing_format",
         "stage",
+        "tag_list",
     )
 
     list_filter = ("tags",)
     search_fields = ["remember", "^user__username"]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("tags")
+
+    def tag_list(self, obj):
+        return u", ".join(o.name for o in obj.tags.all())
