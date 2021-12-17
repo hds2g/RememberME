@@ -4,8 +4,8 @@
     <a href="/">RememberME</a>
     <ul>
         {% if user.is_active %}
-        {% user_display user %}
-
+        <li>Welcome <a href="{% url "account_logout" %}">{% user_display user %}</a></li>
+        <li><a href="{% url "remembers:add" %}">Add Remember</a></li>
         <li><a href="{% url "account_logout" %}">Logout</a></li>
         {% else %}
         <li><a href="{% url "account_login" %}">Login</a></li>

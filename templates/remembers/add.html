@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    <style  type="text/css">
+        .hidden{
+            display:none
+        }
+    </style>
+
+    <div class="pt-5">
+
+        <form action="" method="POST">
+
+
+            {% csrf_token %}
+            {{form.media}}
+            {% if form.errors %}
+                <span class="">{{form.errors}}</span> 
+            {% endif %}
+        
+            <div class="">
+                {{form.remember}}
+
+                <!-- https://stackoverflow.com/questions/2902008/django-how-do-i-add-arbitrary-html-attributes-to-input-fields-on-a-form -->
+                {{form.tags.label}} {{form.tags|attr:"data-role=tagsinput"|attr:"id=id_tags"}}
+
+                {% if field.errors %}
+                        {% for error in field.errors %}
+                            <span class="">{{error}}</span> 
+                        {% endfor %}
+                    {% endif %}
+            </div>
+<!-- 
+            {% for field in form %}
+                <div class="">
+
+                    {{field.label}}
+
+                    {{field}}
+                    
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <span class="">{{error}}</span> 
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %} -->
+
+            <button type="submit" class="">Submit</button>
+        </form>
+        <p>Common Tags: 
+        {% for mt in common_tags %}
+            <a href="#" class="badge badge-success">{{mt}}</a>
+        {% endfor %}
+        </p>
+    </div>    
+{% endblock content %}        
+
+
+
+

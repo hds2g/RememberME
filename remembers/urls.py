@@ -8,6 +8,7 @@ from remembers.views import (
     remember_ng,
     tagged,
     AllView,
+    add,
 )
 from . import views
 from django.views.decorators.csrf import csrf_exempt
@@ -19,6 +20,7 @@ urlpatterns = [
     path("<int:id>/ok/", remember_ok, name="ok"),
     path("<int:id>/ng/", remember_ng, name="ng"),
     path("all/", AllView.as_view(), name="all"),
+    path("add/", add, name="add"),
     # EdiforJS
     path("uploadi/", csrf_exempt(uploadi), name="uploadi"),
     path("uploadf/", csrf_exempt(uploadf), name="uploadf"),

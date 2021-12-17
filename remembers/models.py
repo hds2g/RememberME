@@ -61,7 +61,7 @@ class Remember(core_models.TimeStampedModel):
         }
     )
 
-    slug = models.SlugField(unique=True, max_length=100)
+    # slug = models.SlugField(unique=True, max_length=100) does it need?
     tags = TaggableManager(blank=True)
 
     def __str__(self):

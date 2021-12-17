@@ -8,6 +8,7 @@ django = "==3.2"
 django-taggit = "*"
 django-taggit-autosuggest = "*"
 tagit = "*"
+django-widget-tweaks = "*"
 
 [dev-packages]
 black = "*"
