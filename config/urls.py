@@ -23,6 +23,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("users/", include("users.urls", namespace="users")),
     path("remembers/", include("remembers.urls", namespace="remembers")),
+    path("martor/", include("martor.urls")),
     path("admin/", admin.site.urls),
 ]
 

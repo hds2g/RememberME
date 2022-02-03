@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime, timedelta
+from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponse
 from django.views.generic import (
@@ -13,6 +14,8 @@ from django.views.generic import (
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.forms import ModelForm
+from .forms import RememberForm
+
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
@@ -24,19 +27,13 @@ from .models import Remember
 # from users import models
 
 
-class RememberForm(ModelForm):
-    class Meta:
-        model = Remember
-        fields = ["remember", "tags"]
-
-
 class HomeView(ListView):
     """HomeView Definition"""
 
     model = Remember
 
-    paginate_by = 12
-    paginate_orphans = 5
+    paginate_by = 5
+    paginate_orphans = 2
     # ordering = "created"
     context_object_name = "remembers"
     template_name = "remembers/remember_list.html"
@@ -61,22 +58,39 @@ class HomeView(ListView):
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         context["common_tags"] = Remember.tags.most_common()[:4]
+
+        # print(remembers.values("tags"))
+
         return context
 
 
-def editpost(request, id):
+@login_required
+def delete(request, id):
     instance = get_object_or_404(Remember, id=id)
+
+    # Remember.objects.filter(id=id).delete()
+    instance.delete()
+    return redirect("core:home")
+
+
+@login_required
+def edit(request, id):
+    instance = get_object_or_404(Remember, id=id)
+
     form = RememberForm(request.POST or None, instance=instance)
     if form.is_valid():
         form.save()
-        return redirect("/{}/".format(instance.id))
+        return redirect("/remembers/{}/".format(instance.id))
     return render(request, "remembers/edit.html", {"form": form})
 
 
-def postdetail(request, id):
-    remember = Remember.objects.get(id=id)
+@login_required
+def detail(request, id):
+    # print(request.user)
+    # remember = Remember.objects.filter(user=request.user, id=id)
+    remember = Remember.objects.filter(user=request.user).get(id=id)
     # print(id)
-    # print(remember)
+    print(remember.tags)
     return render(request, "remembers/detail.html", {"remember": remember})
 
 
@@ -142,11 +156,16 @@ class AllView(ListView):
 
     model = Remember
 
-    paginate_by = 12
-    paginate_orphans = 5
+    paginate_by = 5
+    paginate_orphans = 2
     ordering = "created"
     context_object_name = "remembers"
     template_name = "remembers/remember_list.html"
+    print("AllView")
+    # theme = getattr(settings, "MARTOR_THEME", "bootstrap")
+    # return render(request, '%s/test_markdownify.html' % theme, context)
+    # template_name = "%s/test_markdownify.html" % theme
+    # print(template_name)
     # print(model)
 
     def get_queryset(self):
@@ -156,6 +175,8 @@ class AllView(ListView):
         # print(self.request.user.is_anonymous)
         if self.request.user.is_authenticated:
             # return Remember.objects.filter(user=self.request.user)
+
+            # print(Remember.objects.filter(user=self.request.user).order_by("-created"))
             return Remember.objects.filter(user=self.request.user).order_by("-created")
         else:
             return []
@@ -168,69 +189,12 @@ class AllView(ListView):
         return context
 
 
-@requires_csrf_token
-def uploadi(request):
-    print(uploadi)
-    f = request.FILES["image"]
-    fs = FileSystemStorage()
-    filename = str(f).split(".")[0]
-    file = fs.save(filename, f)
-    fileurl = fs.url(file)
-    return JsonResponse({"success": 1, "file": {"url": fileurl}})
-
-
-@requires_csrf_token
-def uploadf(request):
-    print(uploadf)
-    f = request.FILES["file"]
-    fs = FileSystemStorage()
-    filename, ext = str(f).split(".")
-    print(filename, ext)
-    file = fs.save(str(f), f)
-    fileurl = fs.url(file)
-    fileSize = fs.size(file)
-    return JsonResponse(
-        {"success": 1, "file": {"url": fileurl, "name": str(f), "size": fileSize}}
-    )
-
-
-def upload_link_view(request):
-    import requests
-    from bs4 import BeautifulSoup
-
-    print(request.GET["url"])
-    url = request.GET["url"]
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, features="html.parser")
-    metas = soup.find_all("meta")
-    description = ""
-    title = ""
-    image = ""
-    for meta in metas:
-        if "property" in meta.attrs:
-            if meta.attrs["property"] == "og:image":
-                image = meta.attrs["content"]
-        elif "name" in meta.attrs:
-            if meta.attrs["name"] == "description":
-                description = meta.attrs["content"]
-            if meta.attrs["name"] == "title":
-                title = meta.attrs["content"]
-    return JsonResponse(
-        {
-            "success": 1,
-            "meta": {
-                "description": description,
-                "title": title,
-                "image": {"url": image},
-            },
-        }
-    )
-
-
 def tagged(request, slug):
+    print(slug)
     tag = get_object_or_404(Tag, slug=slug)
+    print(tag)
     # print(type(slug))
-    # print(type(tag))
+    print(type(tag))
     # Filter posts by tag name
     if request.user.is_authenticated:
         common_tags = Remember.tags.most_common()[:4]

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load account %}
+
+
+{% block page_title %}
+    {% user_display user %}'s Profile
+{% endblock page_title %}
+
+{% block content %}
+{% user_display user %}'s Profile
+{% if user.socialaccount_set != None %}
+<img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" />
+{% endif %}
+
+{% endblock content %} 

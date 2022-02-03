@@ -2,8 +2,9 @@ import json
 from datetime import datetime, timedelta
 from django.db import models
 from core import models as core_models
-from django_editorjs import EditorJsField
+
 from taggit.managers import TaggableManager
+from martor.models import MartorField
 
 
 class Stage(core_models.TimeStampedModel):
@@ -40,33 +41,27 @@ class Remember(core_models.TimeStampedModel):
     showing_date = models.DateField(
         "Showing Date", default=datetime.today() + timedelta(days=7)
     )
+    remember = MartorField()
 
-    remember = EditorJsField(
-        editorjs_config={
-            "tools": {
-                "Link": {"config": {"endpoint": "/linkfetching/"}},
-                "Image": {
-                    "config": {
-                        "endpoints": {
-                            "byFile": "/remembers/uploadi/",
-                            "byUrl": "/remembers/uploadi/",
-                        },
-                        "addtionalRequestHeader": [
-                            {"Content-Type": "multipart/form-data"}
-                        ],
-                    }
-                },
-                "Attaches": {"config": {"endpoint": "/uploadf/"}},
-            }
-        }
-    )
-
-    # slug = models.SlugField(unique=True, max_length=100) does it need?
+    # slug = models.SlugField(unique=True, max_length=100)
     tags = TaggableManager(blank=True)
 
+    # def __str__(self):
+    #     time = self.remember["time"]
+    #     print(time)
+    #     print(self.remember)
+    #     print(type(self.remember))
+    #     # print(rem)
+    #     # print(rem["time"])
+    #     # return self.user
+
+    #     # return "test"
+    #     return self.user.username + "-" + str(time)
+
+
+class RememberMeta(models.Model):
+    remember = models.ForeignKey(Remember, on_delete=models.CASCADE)
+    text = MartorField()
+
     def __str__(self):
-        rem = json.loads(self.remember)
-        # print(rem)
-        # print(rem["time"])
-        # return self.user
-        return self.user.username + "-" + str(rem["time"])
+        return self.text

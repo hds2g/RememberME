@@ -9,6 +9,7 @@ django-taggit = "*"
 django-taggit-autosuggest = "*"
 tagit = "*"
 django-widget-tweaks = "*"
+django-editorjs-fields = "*"
 
 [dev-packages]
 black = "*"

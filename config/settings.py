@@ -41,7 +41,6 @@ PROJECT_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_seed",
-    "django_editorjs",
     "taggit",
     # "taggit_autosuggest",
     "django.contrib.sites",
@@ -51,6 +50,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.kakao",
     "allauth.socialaccount.providers.google",
     "widget_tweaks",
+    "martor",
 ]
 
 DJANGO_APPS = [
@@ -109,7 +109,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -203,3 +202,36 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 # Tagit
 TAGGIT_CASE_INSENSITIVE = False
 TAGGIT_LIMIT = 50
+
+
+# MARTOR
+
+## Martor Configuration
+MARTOR_THEME = "bootstrap"  # semantic
+MARTOR_ENABLE_LABEL = True
+MARTOR_ENABLE_CONFIGS = {
+    "emoji": "true",  # to enable/disable emoji icons.
+    "imgur": "true",  # to enable/disable imgur/custom uploader.
+    "mention": "true",  # to enable/disable mention
+    "jquery": "true",  # to include/revoke jquery (require for admin default django)
+    "living": "false",  # to enable/disable live updates in preview
+    "spellcheck": "false",  # to enable/disable spellcheck in form textareas
+    "hljs": "true",  # to enable/disable hljs highlighting in preview
+}
+MARTOR_TOOLBAR_BUTTONS = [
+    "bold",
+    "italic",
+    "horizontal",
+    "heading",
+    "pre-code",
+    "blockquote",
+    "unordered-list",
+    "ordered-list",
+    "link",
+    "image-link",
+    "image-upload",
+    "emoji",
+    "direct-mention",
+    "toggle-maximize",
+    "help",
+]

@@ -1,38 +1,70 @@
 {% extends "base.html" %}
+{% load static %}
+{% load martortags %}
 
+{% block page_title %}
+    RememberME
+{% endblock page_title %}
 
-{% block page_name %}
-    Home
-{% endblock page_name %}
+{% block css %}
+  <link href="{% static 'plugins/css/ace.min.css' %}" type="text/css" media="all" rel="stylesheet" />
+  <link href="{% static 'martor/css/martor.bootstrap.min.css' %}" type="text/css" media="all" rel="stylesheet" />
+{% endblock css %}
 
 {% block content %}
+
     {% if user.is_authenticated %}
 
-        tags: 
-        {% for tag in common_tags %}
-        <a href="{% url 'remembers:tagged' tag.slug %}">{{tag}}</a>
-        {% endfor %}
+    {% if remembers.count != 0 %}
+            tags: 
+            {% for tag in common_tags %}
+            <a href="{% url 'remembers:tagged' tag.slug %}">{{tag}}</a>
+            {% endfor %}
+        {% endif %}
 
-        {% for remember in remembers  %}
-            {% comment %} <h2>{{remember.remember}}</h2>
-            <h3>{{remember.stage}}</h3> 
-            <h3>{{remember.showing_date}}</h3> {% endcomment %}
+        <div style="margin: 30px">
+            {% for remember in remembers  %}
+                {% comment %} <h3>{{remember.stage}}</h3> 
+                <h3>{{remember.showing_date}}</h3> {% endcomment %}
+                {% for tag in remember.tags.all %}
+                    <a href="{% url 'remembers:tagged' tag.slug %}" class="badge badge-info" >{{ tag }}</a>
+                {% endfor %}
+                
+                {{ remember.remember |safe_markdown }}
+                <a href="/remembers/edit/{{remember.id}}/">Edit</a>
+                <a href="/remembers/delete/{{remember.id}}/">Delete</a>
 
-            
-            {% include "editorjs__.html" %}
+                <hr style="border: solid #dedede; border-width: 10px 0 0;">
 
-        {% empty %}
-            <li> no data <li>
-        {% endfor %}
+                {% empty %}
+                    Perfect! No Remember.
+            {% endfor %}
+        </div>
     {% else %}
         {% include "introduction.html" %}
     {% endif %}
 
-    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
     
     {% if page_obj.has_next  %}
+        Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+
         <a href="?page={{page_obj.next_page_number}}">Next</a>
     {% endif %}
 
 {% endblock content %}
+
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'plugins/js/highlight.min.js' %}"></script>
+  <script>
+    $('.martor-preview pre').each(function(i, block){
+        hljs.highlightBlock(block);
+    });
+  </script>
+{% endblock %}
+
+
+
+
+
 

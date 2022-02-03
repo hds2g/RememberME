@@ -1,11 +1,21 @@
+from django.db import models
 from django.contrib import admin
-from . import models
+from martor.widgets import AdminMartorWidget
+from martor.models import MartorField
+from remembers.models import RememberMeta, Remember
 
 
-@admin.register(models.Remember)
+class RememberMetaAdminInline(admin.TabularInline):
+    model = RememberMeta
+
+
 class RememberAdmin(admin.ModelAdmin):
 
     """Remember Admin Definition"""
+
+    inlines = [
+        RememberMetaAdminInline,
+    ]
 
     def created_format(self, obj):
         return obj.created.strftime("%Y-%m-%d")
@@ -37,8 +47,16 @@ class RememberAdmin(admin.ModelAdmin):
     list_filter = ("tags",)
     search_fields = ["remember", "^user__username"]
 
+    formfield_overrides = {
+        MartorField: {"widget": AdminMartorWidget},
+        models.TextField: {"widget": AdminMartorWidget},
+    }
+
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("tags")
 
     def tag_list(self, obj):
         return u", ".join(o.name for o in obj.tags.all())
+
+
+admin.site.register(Remember, RememberAdmin)
