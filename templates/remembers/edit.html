@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{% block page_title %}
+    Edit
+{% endblock page_title %}
 {% load static %} {% for message in messages %}
 
 <h1>{{message}}</h1>

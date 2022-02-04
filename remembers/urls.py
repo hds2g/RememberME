@@ -16,8 +16,8 @@ app_name = "remembers"
 
 urlpatterns = [
     path("<int:id>/", detail, name="detail"),
-    path("<int:id>/ok/", remember_ok, name="ok"),
-    path("<int:id>/ng/", remember_ng, name="ng"),
+    path("ok/", remember_ok, name="ok"),
+    path("ng/", remember_ng, name="ng"),
     path("all/", AllView.as_view(), name="all"),
     path("add/", add, name="add"),
     path("edit/<int:id>/", edit, name="edit"),

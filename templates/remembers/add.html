@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}{{ title }} :: {{ block.super }}{% endblock %}
+{% block page_title %}
+    Add
+{% endblock page_title %}
 
 {% block css %}
   <link href="{% static 'plugins/css/ace.min.css' %}" type="text/css" media="all" rel="stylesheet" />

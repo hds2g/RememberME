@@ -36,7 +36,7 @@ class HomeView(ListView):
     paginate_orphans = 2
     # ordering = "created"
     context_object_name = "remembers"
-    template_name = "remembers/remember_list.html"
+    template_name = "remembers/home.html"
     # print(model)
 
     def get_queryset(self):
@@ -95,10 +95,17 @@ def detail(request, id):
 
 
 @csrf_exempt
-def remember_ok(request, id):
+def remember_ok(request):
     user = request.user
     # get remember.
-    remember = Remember.objects.get(pk=id)
+
+    if request.method == "POST" and request.is_ajax:
+        id = request.POST.get("id")
+        print(id)
+        remember = Remember.objects.get(pk=id)
+    # post_id = request.GET.get("data")
+    # print("data")
+    # print(post_id)
 
     if user == remember.user:
 
@@ -124,7 +131,7 @@ def remember_ok(request, id):
                 )
 
         remember.save()
-
+        print("remember_ok: ok")
         return HttpResponse("ok :)")
 
     else:
@@ -133,8 +140,16 @@ def remember_ok(request, id):
 
 
 @csrf_exempt
-def remember_ng(request, id):
+def remember_ng(request):
     user = request.user
+
+    if request.method == "POST" and request.is_ajax:
+        id = request.POST.get("id")
+        print(id)
+        remember = Remember.objects.get(pk=id)
+    # post_id = request.GET.get("data")
+    # print("data")
+    # print(post_id)
     # get remember.
     remember = Remember.objects.get(pk=id)
 
@@ -160,7 +175,7 @@ class AllView(ListView):
     paginate_orphans = 2
     ordering = "created"
     context_object_name = "remembers"
-    template_name = "remembers/remember_list.html"
+    template_name = "remembers/all.html"
     print("AllView")
     # theme = getattr(settings, "MARTOR_THEME", "bootstrap")
     # return render(request, '%s/test_markdownify.html' % theme, context)
@@ -216,7 +231,7 @@ def tagged(request, slug):
     }
 
     # FIX ME: need to change template for tagged
-    return render(request, "remembers/remember_list.html", context)
+    return render(request, "remembers/all.html", context)
 
 
 @login_required
