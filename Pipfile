@@ -11,6 +11,7 @@ tagit = "*"
 django-widget-tweaks = "*"
 django-editorjs-fields = "*"
 
+
 [dev-packages]
 black = "*"
 flake8 = "*"

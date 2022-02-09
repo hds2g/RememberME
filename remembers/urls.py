@@ -8,6 +8,7 @@ from remembers.views import (
     add,
     edit,
     delete,
+    markdown_uploader,
 )
 from . import views
 from django.views.decorators.csrf import csrf_exempt

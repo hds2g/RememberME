@@ -3,6 +3,7 @@
 <head>
   <link href="{% static 'plugins/css/bootstrap.min.css' %}" type="text/css" media="all" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/tagsinput.css" />
+  
   <title>{% block page_title %}{% endblock %}| RememberMe</title>
   <style>.main-container {margin-top: 3em}</style>
   {% block css %}{% endblock %}
@@ -32,8 +33,14 @@
   <script type="text/javascript" src="{% static 'plugins/js/jquery.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'plugins/js/bootstrap.min.js' %}"></script>
   <script src="/static/js/tagsinput.js"></script>
-
-  {% block js %}{% endblock %}
+  <script text="javascript">
+      setTimeout(fade_out, 3000);
+      function fade_out() {
+          $(".messages").fadeOut().empty();
+      }
+      //$(".post-form")[0].reset(); // this is to reset the form 
+  </script>
+{% block js %}{% endblock %}
 </body>
 {% include "partials/footer.html" %}
 

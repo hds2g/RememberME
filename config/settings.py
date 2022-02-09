@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import time
+import tempfile
 
 from pathlib import Path
 
@@ -196,8 +198,33 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 ACCOUNT_FORMS = {"signup": "users.forms.MyCustomSignupForm"}
 
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-ACCOUNT_EMAIL_VERIFICATION = "none"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "hwangdaesung1001@gmail.com"
+EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_MAIL_APP_PASSWD")
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"  # !!!! very important for django-allauth specifically
+
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False  # a personal preference. True by default. I don't want users to be interrupted by logging in
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # a personal preference. I don't want to add 'i don't remember my username' like they did at Nintendo, it is stupid
+
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "users:email_success"  # a page to identify that email is confirmed when not logged in
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = (
+    "users:email_success"  # same but logged in
+)
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7  # a personal preference. 3 by default
+ACCOUNT_EMAIL_REQUIRED = True  # no questions here
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # as the email will be used for login
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True  # False by default
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # True by default
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login'
+ACCOUNT_USERNAME_BLACKLIST = [
+    "yomama",
+]
+ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
+ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
 
 # Tagit
 TAGGIT_CASE_INSENSITIVE = False
@@ -212,7 +239,7 @@ MARTOR_ENABLE_LABEL = True
 MARTOR_ENABLE_CONFIGS = {
     "emoji": "true",  # to enable/disable emoji icons.
     "imgur": "true",  # to enable/disable imgur/custom uploader.
-    "mention": "true",  # to enable/disable mention
+    # "mention": "true",  # to enable/disable mention
     "jquery": "true",  # to include/revoke jquery (require for admin default django)
     "living": "false",  # to enable/disable live updates in preview
     "spellcheck": "false",  # to enable/disable spellcheck in form textareas
@@ -231,7 +258,20 @@ MARTOR_TOOLBAR_BUTTONS = [
     "image-link",
     "image-upload",
     "emoji",
-    "direct-mention",
+    # "direct-mention",
     "toggle-maximize",
     "help",
 ]
+
+MARTOR_UPLOAD_PATH = "uploads/{}".format(time.strftime("%Y/%m/%d/"))
+MARTOR_UPLOAD_URL = "/api/uploader/"  # change to local uploader
+# Maximum Upload Image
+# 2.5MB - 2621440
+# 5MB - 5242880
+# 10MB - 10485760
+# 20MB - 20971520
+# 50MB - 5242880
+# 100MB 104857600
+# 250MB - 214958080
+# 500MB - 429916160
+MAX_IMAGE_UPLOAD_SIZE = 10485760  # 10MB
