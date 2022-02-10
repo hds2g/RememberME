@@ -18,7 +18,7 @@
     {% if remembers.count != 0 %}
             tags: 
             {% for tag in common_tags %}
-            <a href="{% url 'remembers:tagged' tag.slug %}">{{tag}}</a>
+            <a href="{% url 'remembers:tagged' tag.slug %}?filter=active">{{tag}}</a>
             {% endfor %}
         {% endif %}
 
@@ -28,7 +28,7 @@
                     {% comment %} <h3>{{remember.stage}}</h3> 
                     <h3>{{remember.showing_date}}</h3> {% endcomment %}
                     {% for tag in remember.tags.all %}
-                        <a href="{% url 'remembers:tagged' tag.slug %}" class="badge badge-info" >{{ tag }}</a>
+                        <a href="{% url 'remembers:tagged' tag.slug %}?filter=active" class="badge badge-info" >{{ tag }}</a>
                     {% endfor %}
                     
                     {{ remember.remember |safe_markdown }}

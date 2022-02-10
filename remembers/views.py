@@ -188,7 +188,7 @@ class AllView(ListView):
     ordering = "created"
     context_object_name = "remembers"
     template_name = "remembers/all.html"
-    print("AllView")
+    # print("AllView")
     # theme = getattr(settings, "MARTOR_THEME", "bootstrap")
     # return render(request, '%s/test_markdownify.html' % theme, context)
     # template_name = "%s/test_markdownify.html" % theme
@@ -216,10 +216,46 @@ class AllView(ListView):
         return context
 
 
-def tagged(request, slug):
-    print(slug)
+def staged(request, stage, all=""):
+    print(all)
+    # print(stage)
+    # stage := "1 Week"
+    filter = request.GET.get("filter")
+
+    if request.user.is_authenticated:
+        # Fix ME: filter tags=tag has error on django 4.0
+        # so, I downgrage django to 3.2
+
+        # print(Remember.REMEMBER_STAGE)
+
+        for s in Remember.REMEMBER_STAGE:  #
+            # print(s)
+            if stage == s[1]:
+                stage_days = s[0]
+                break
+        remembers = []
+        if filter == "all":
+            remembers = Remember.objects.filter(user=request.user, stage=stage_days)
+        elif filter == "active":
+            remembers = Remember.objects.filter(
+                user=request.user, stage=stage_days
+            ).exclude(showing_date__gt=date.today())
+
+        print(remembers.count())
+    else:
+        return []
+
+    context = {
+        "remembers": remembers,
+    }
+    return render(request, "remembers/all.html", context)
+
+
+def tagged(request, slug, all=""):
+    print(all)
+    filter = request.GET.get("filter")
     tag = get_object_or_404(Tag, slug=slug)
-    print(tag)
+    # print(tag)
     # print(type(slug))
     print(type(tag))
     # Filter posts by tag name
@@ -228,9 +264,13 @@ def tagged(request, slug):
         # print(common_tags)
         # Fix ME: filter tags=tag has error on django 4.0
         # so, I downgrage django to 3.2
-        remembers = Remember.objects.filter(user=request.user, tags=tag).exclude(
-            showing_date__gt=date.today()
-        )
+        remembers = []
+        if filter == "all":
+            remembers = Remember.objects.filter(user=request.user, tags=tag)
+        elif filter == "active":
+            remembers = Remember.objects.filter(user=request.user, tags=tag).exclude(
+                showing_date__gt=date.today()
+            )
 
     else:
         return []
@@ -282,7 +322,7 @@ def markdown_uploader(request):
     if request.method == "POST" and request.is_ajax():
         if "markdown-image-upload" in request.FILES:
             image = request.FILES["markdown-image-upload"]
-            print(image.size)
+            # print(image)
             image_types = [
                 "image/png",
                 "image/jpg",

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load account %}
+{% load static %}
+{% load martortags %}
+
+
+{% block page_title %}
+    {% user_display user %}'s Profile
+{% endblock page_title %}
+
+{% block content %}
+<div>
+{% user_display user %}'s Profile
+{% if user.socialaccount_set != None %}
+<img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" />
+{% endif %}
+</div>
+
+{% comment %} Display the number of remember in each stage {% endcomment %}
+
+<div>
+    <div>
+        My tags: 
+        {% for tag in tags %}
+            <a href="{% url 'remembers:tagged' tag.slug %}?filter=all">{{tag}}</a>
+        {% endfor %}
+    </div>
+    <div>
+        stage:
+
+        {% for stage, num in stages %}
+            <a href="{% url 'remembers:staged' stage %}?filter=all">{{stage}}({{num}})</a>
+        {% endfor %}
+
+        {% for remember in user.remembers.all  %}
+            {% comment %} {{ remember.stage }} {% endcomment %}
+            {% comment %} {{ remember.get_stage_display }} {% endcomment %}
+        {% endfor %}
+    </div>
+
+
+</div>
+
+
+
+{% endblock content %} 

@@ -9,6 +9,7 @@ from remembers.views import (
     edit,
     delete,
     markdown_uploader,
+    staged,
 )
 from . import views
 from django.views.decorators.csrf import csrf_exempt
@@ -23,6 +24,6 @@ urlpatterns = [
     path("add/", add, name="add"),
     path("edit/<int:id>/", edit, name="edit"),
     path("delete/<int:id>/", delete, name="delete"),
-    # Tag
     path("tag/<slug:slug>/", tagged, name="tagged"),
+    path("stage/<str:stage>/", staged, name="staged"),
 ]
